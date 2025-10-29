@@ -1,0 +1,11 @@
+streamlit
+pandas
+numpy
+yfinance
+psycopg2
+supabase
+dotenv
+psycopg2
+numpy_financial
+math
+datetime
