@@ -2,10 +2,8 @@ streamlit
 pandas
 numpy
 yfinance
-psycopg2
+psycopg2-binary
 supabase
 dotenv
-psycopg2
 numpy_financial
-math
 datetime
