@@ -2,16 +2,16 @@ import os
 import pandas as pd
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
+import streamlit as st
 
 
-load_dotenv()
 
-SUPABASE_HOST = os.getenv("SUPABASE_HOST")
-SUPABASE_DB = os.getenv("SUPABASE_DB")
-SUPABASE_USER = os.getenv("SUPABASE_USER")
-SUPABASE_PASSWORD = os.getenv("SUPABASE_PASSWORD")
-SUPABASE_PORT = os.getenv("SUPABASE_PORT", "5432")
+
+SUPABASE_HOST = st.secrets["SUPABASE_HOST"]
+SUPABASE_DB = "postgres"
+SUPABASE_USER = "postgres"
+SUPABASE_PASSWORD = st.secrets["SUPABASE_PASSWORD"]
+SUPABASE_PORT = 5432
 TABLE_NAME = "investmentsdb"
 
 
