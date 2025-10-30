@@ -11,24 +11,44 @@ import yfinance as yf
 
 #Fund,Equity quoteType
 
-import os
-import pandas as pd
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
+#import os
+#import pandas as pd
+#import psycopg2
+#from psycopg2.extras import RealDictCursor
+#from dotenv import load_dotenv
+from supabase import create_client, Client
 
 
-load_dotenv()
+SUPABASE_URL = "https://yrwwtrgshppxdspizvdg.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd3d0cmdzaHBweGRzcGl6dmRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3MDk2NjQsImV4cCI6MjA3NzI4NTY2NH0.bmq_fUcqDs5QkOJgZlfuXCxJu5v8TJhAaOGjsAg5u10"
 
-SUPABASE_HOST = os.getenv("SUPABASE_HOST")
-SUPABASE_DB = os.getenv("SUPABASE_DB")
-SUPABASE_USER = os.getenv("SUPABASE_USER")
-SUPABASE_PASSWORD = os.getenv("SUPABASE_PASSWORD")
-SUPABASE_PORT = os.getenv("SUPABASE_PORT","5432")
-TABLE_NAME = "investmentsdb"
 
-# Connection string for psycopg2
-conn_str = f"host={SUPABASE_HOST} dbname={SUPABASE_DB} user={SUPABASE_USER} password={SUPABASE_PASSWORD} port={SUPABASE_PORT} sslmode=require"
+if not SUPABASE_URL or not SUPABASE_KEY:
+    print("Error: SUPABASE_URL and SUPABASE_KEY environment variables are not set.")
+    exit()
 
-psycopg2.connect(conn_str)
-print("Connected successfully")
+try:
+    # Initialize the client
+    supabase_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    print("Supabase client initialized successfully!")
+except Exception as e:
+    print(f"Error initializing Supabase client: {e}")
+    supabase_client = None
+
+if supabase_client:
+    try:
+        # Select all users from the 'users' table
+        response = supabase_client.table('investmentsdb').select('*').execute()
+        print(response)
+       
+        if response.data:
+            print(response.data)
+        else:
+            print("No users found.")
+
+         
+            
+    except Exception as e:
+        print(f"Error reading data: {e}")
+
+
