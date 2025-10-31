@@ -64,7 +64,7 @@ def get_user_email(user):
 
 def show_app_ui():
     """Render the main investment UI. Separated so we can call it immediately after login without requiring a rerun."""
-    GIT 
+    
     st.title('Investment Tracker')
 
     df = load_data()
