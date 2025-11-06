@@ -7,7 +7,7 @@ from xirr import xirr
 import yfinance as yf
 import math
 import numpy_financial as npf
-from supabase_psycopg2_helper import load_data, save_data
+from supabase_psycopg2_helper import load_data, save_data, add_investment
 from supabase_auth_helper import sign_in, sign_out, get_user
 
 # Helper to safely trigger a rerun across Streamlit versions
@@ -103,10 +103,19 @@ def show_app_ui():
                             fetched = fetched * fx
                     current_nav_inr = fetched
 
-            new = dict(date=pd.to_datetime(date), category=category, name=name, ticker=ticker, units=units, nav_at_purchase=nav_at_purchase_inr, current_nav=current_nav_inr)
-            df = pd.concat([df, pd.DataFrame([new])], ignore_index=True)
-            save_data(df)
+            # Use fast add_investment instead of loading full dataframe and re-saving
+            add_investment(
+                date=pd.to_datetime(date),
+                category=category,
+                name=name,
+                ticker=ticker,
+                units=units,
+                nav_at_purchase=nav_at_purchase_inr,
+                current_nav=current_nav_inr
+            )
             st.success('Investment added')
+            # Reload data to reflect the new investment in UI
+            st.rerun()
 
     st.header('Portfolio')
     # Add refresh button

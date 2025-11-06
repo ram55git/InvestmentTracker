@@ -42,11 +42,25 @@ def save_data(df):
         with conn.cursor() as cur:
             cur.execute(f"DELETE FROM {TABLE_NAME}")
             for _, row in df.iterrows():
+                # Convert NaT to None for PostgreSQL compatibility
+                date_val = None if pd.isna(row['date']) else row['date']
                 cur.execute(
                     f"INSERT INTO {TABLE_NAME} (date, category, name, ticker, units, nav_at_purchase, current_nav) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                     (
-                        row['date'], row['category'], row['name'], row['ticker'],
+                        date_val, row['category'], row['name'], row['ticker'],
                         row['units'], row['nav_at_purchase'], row['current_nav']
                     )
                 )
+        conn.commit()
+
+def add_investment(date, category, name, ticker, units, nav_at_purchase, current_nav):
+    """Fast insert of a single investment without deleting existing data."""
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            # Convert NaT to None for PostgreSQL compatibility
+            date_val = None if pd.isna(date) else date
+            cur.execute(
+                f"INSERT INTO {TABLE_NAME} (date, category, name, ticker, units, nav_at_purchase, current_nav) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (date_val, category, name, ticker, units, nav_at_purchase, current_nav)
+            )
         conn.commit()
